@@ -1,0 +1,534 @@
+SELECT * 
+FROM EMPLOYES ;
+
+SELECT Nom , Prenom , Fonction
+FROM EMPLOYES ;
+
+SELECT Ville 
+FROM CLIENTS ;
+
+SELECT DISTINCT Ville 
+FROM CLIENTS ;
+
+SELECT SOCIETE AS clients , Adresse , Ville 
+FROM CLIENTS ;
+
+SELECT Societe AS "Mes Clients" , Adresse , Ville
+FROM Clients ;
+
+SELECT Societe "Mes Clients" , Adresse "Localisation" , Ville 
+FROM CLIENTS ;
+
+SELECT Nom , Prenom , Salaire , COALESCE(Commission,0) AS Commission
+FROM EMPLOYES ;
+
+SELECT 3*3 AS Resultat  ;
+SELECT 3+3 AS Resultat  ;
+SELECT 3-3 AS Resultat  ;
+SELECT 3/3 AS Resultat  ;
+
+SELECT Nom , Fonction , (Salaire*12) AS "Salaire Annuel"
+FROM EMPLOYES ;
+
+SELECT Nom , Fonction , Salaire ,COALESCE(Commission,0) AS Commission ,
+       ((Salaire*12 )+ COALESCE(Commission,0)) AS "Salaire Annuel et Commission"
+FROM EMPLOYES ;
+
+SELECT * 
+FROM EMPLOYES
+WHERE Nom = 'Davolio' ;
+
+SELECT * 
+FROM EMPLOYES
+WHERE SALAIRE = 8000 ;
+
+SELECT * 
+FROM EMPLOYES 
+WHERE FONCTION = 'Représentant(e)' ;
+
+
+SELECT * 
+FROM EMPLOYES 
+WHERE FONCTION != 'Représentant(e)' ;
+
+SELECT * 
+FROM EMPLOYES 
+WHERE SALAIRE > 3500 ;
+
+SELECT * 
+FROM EMPLOYES 
+WHERE SALAIRE >= 3500 ;
+
+SELECT [SOCIETE],[VILLE],[PAYS]
+FROM CLIENTS ;
+
+SELECT [SOCIETE],[VILLE],[PAYS]
+FROM CLIENTS 
+WHERE PAYS IN ('France' , 'Espagne' , 'Canada');
+
+SELECT Nom , Prenom , Fonction , Date_Embauche
+FROM Employes 
+WHERE Year(Date_Embauche) = 1992 ;
+
+SELECT Nom , Prenom , Fonction , Date_Embauche
+FROM Employes 
+WHERE DATE_EMBAUCHE BETWEEN '01/01/1992' AND '1/12/1992' ;
+
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE SALAIRE BETWEEN 2000 AND 8000 ;
+
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE Nom LIKE 'D%';
+
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE Nom LIKE '%n';
+				
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE Nom LIKE '_v%';
+
+
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE Nom LIKE 'D_v%';
+				
+
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE Nom NOT LIKE 'D%';
+
+SELECT Nom , Prenom ,Fonction, Salaire , Commission
+FROM EMPLOYES
+WHERE Commission IS NULL ;
+				
+SELECT Nom , Prenom ,Fonction, Salaire , Commission
+FROM EMPLOYES
+WHERE Commission IS NOT NULL ;
+	
+SELECT Nom , Prenom , Fonction , Salaire 
+FROM EMPLOYES
+WHERE ( FONCTION = 'Représentant(e)' AND SALAIRE >= 1000 ) ;
+
+SELECT Fonction , AVG(Salaire) AS "Salaire Moyen "
+FROM EMPLOYES
+GROUP BY Fonction ;
+
+SELECT COUNT(*) AS "Nombre Total D'Employés"
+FROM EMPLOYES ;
+	
+SELECT Fonction , COUNT(Salaire) AS "Nombre d'Employés par Fonction"
+FROM EMPLOYES
+GROUP BY Fonction ;
+	
+SELECT Nom , Prenom , Fonction , Salaire
+FROM EMPLOYES 
+WHERE SALAIRE IN 
+(SELECT MAX(Salaire)
+ FROM EMPLOYES) ;
+
+SELECT MAX(SALAIRE) AS "Salaire Maximum",
+       MIN(SALAIRE) AS "Salaire Minimum"
+FROM EMPLOYES;
+
+SELECT SUM(Salaire) AS "Masse Salariale"
+FROM EMPLOYES;
+
+SELECT Fonction , SUM(Salaire) AS "Somme des Salaires" , AVG(SALAIRE) AS "Moyenne des Salaires"
+FROM EMPLOYES
+GROUP BY Fonction ;
+
+SELECT Fonction , SUM(Salaire) AS "Somme des Salaires" , AVG(SALAIRE) AS "Moyenne des Salaires"
+FROM EMPLOYES
+GROUP BY Fonction 
+HAVING (AVG(Salaire) > 5000);
+
+SELECT Fonction , COUNT(*) AS Nombre_Employés
+FROM EMPLOYES
+GROUP BY FONCTION
+HAVING (COUNT(*) >3) ;
+
+SELECT * 
+FROM EMPLOYES
+ORDER BY NOM ;
+
+SELECT * 
+FROM EMPLOYES
+ORDER BY NOM DESC;
+
+SELECT * 
+FROM EMPLOYES
+ORDER BY NOM , PRENOM;
+
+SELECT Nom , Prenom , Commission , Salaire 
+FROM EMPLOYES
+ORDER BY 4 DESC ;
+
+SELECT Nom , Prenom , LEN(Nom) AS "Nombre de Caractère du Nom"
+FROM EMPLOYES ;
+
+SELECT UPPER(Nom) AS Nom , Prenom , Fonction
+FROM EMPLOYES;
+
+
+SELECT UPPER(Nom) AS Nom_Majuscule, 
+       LOWER(Nom) AS Nom_MInuscule,
+	   LEN(Nom) AS La_Taille
+FROM EMPLOYES;
+
+SELECT SUBSTRING(Nom , 1 ,2) AS Initial
+FROM EMPLOYES;
+
+SELECT SUBSTRING('Mon Texte' , 4,5) AS "Ma Sous-Chaîne" ;
+
+SELECT CONCAT('Mr. ' , Nom , ' gagne ' , CAST(Salaire AS CHAR)) AS Resultat 
+FROM EMPLOYES ;
+
+SELECT GETDATE() AS "Date d'Aujourd'hui !";
+
+SELECT Nom , DATEPART(YEAR ,Date_Naissance) AS "Année de Naissance",
+       DATEPART(YEAR,Date_Embauche) AS "Année d'Embauche"
+FROM EMPLOYES ;
+
+SELECT Nom , DATEDIFF(YEAR ,Date_Naissance,GETDATE()) AS "Âge",
+             DATEDIFF(YEAR ,Date_Embauche , GETDATE()) AS "Experience"
+FROM EMPLOYES ;		
+
+SELECT Nom , DATEADD(YEAR ,10,Date_Naissance) AS "10 ans Après Naissance",
+             DATEADD(YEAR ,10,Date_Embauche ) AS "10 ans Après Embauche"
+FROM EMPLOYES ;
+
+SELECT Nom ,Prenom , Fonction , Salaire,
+CASE Fonction
+WHEN 'Vice-président' THEN Salaire*1.1
+WHEN 'Chef des ventes' THEN SALAIRE*1.2
+WHEN 'Représentant(e)' THEN Salaire*1.1 + Commission
+ELSE Salaire*1.1
+END AS "Augmentation Simulée"
+FROM Employes ;
+
+SELECT Formateur_Nom , Formation_Libelle
+FROM FORMATEURS ,FORMATIONS
+WHERE FORMATEURS.formateur_num = FORMATIONS.formateur_num ;
+
+SELECT u.CODE_CLIENT , Societe , No_Commande , Date_Commande
+FROM CLIENTS u , COMMANDES v
+Where u.CODE_CLIENT = v.CODE_CLIENT
+ORDER BY SOCIETE ;
+
+SELECT  v.Nom , v.PRENOM , u.No_Commande
+FROM COMMANDES u , EMPLOYES v
+WHERE u.NO_EMPLOYE = v.NO_EMPLOYE ;
+
+SELECT u.CODE_CLIENT , Societe , No_Commande , Date_Commande , Nom , Prenom
+FROM CLIENTS u , COMMANDES v , EMPLOYES q
+Where u.CODE_CLIENT = v.CODE_CLIENT
+AND   q.NO_EMPLOYE=v.NO_EMPLOYE
+ORDER BY SOCIETE ;
+
+SELECT u.CODE_CLIENT , Societe , No_Commande , Date_Commande , Nom , Prenom
+FROM CLIENTS u JOIN COMMANDES v ON ( u.CODE_CLIENT = v.CODE_CLIENT)
+               JOIN EMPLOYES q  ON ( v.NO_EMPLOYE = q.NO_EMPLOYE)
+ORDER BY SOCIETE ;
+
+SELECT u.formateur_nom , u.formateur_num AS "Num Formateur de la Table FORMATEURS",
+       v.formateur_num AS "Num Formateur de la Table FORMATIONS" , v.formation_libelle
+FROM FORMATEURS u ,FORMATIONS v 
+WHERE v.formateur_num = u.formateur_num ;
+
+SELECT u.Nom , u.Prenom , v.NOM AS "Nom Supérieur" , v.PRENOM AS "Prénom Supérieur" 
+FROM EMPLOYES u , EMPLOYES v 
+WHERE u.REND_COMPTE = v.NO_EMPLOYE ;
+
+SELECT u.Nom , u.Prenom , COALESCE(v.NOM,'Pas de Supérieur') AS "Nom Supérieur",
+                          COALESCE(v.PRENOM,'Pas de Supérieur') AS "Prénom Supérieur" 
+FROM EMPLOYES u   LEFT OUTER JOIN  EMPLOYES v
+ON    u.REND_COMPTE = v.NO_EMPLOYE ;
+
+(SELECT Societe , Ville , Pays , 'CLIENTS' AS Table_Source 
+FROM Clients )
+UNION ALL
+(SELECT Societe , Ville , Pays , 'FOURNISSEURS' AS Table_Source
+FROM FOURNISSEURS) 
+ORDER BY 4; 
+
+(SELECT  Ville , Pays  
+FROM Clients )
+INTERSECT
+(SELECT  Ville , Pays 
+FROM FOURNISSEURS) 
+ORDER BY 2;
+
+((SELECT Pays
+ FROM CLIENTS)
+ EXCEPT
+(SELECT Pays 
+ FROM FOURNISSEURS ))
+EXCEPT
+(SELECT PAYS
+ FROM CLIENTS 
+ WHERE Pays NOT IN 
+ (SELECT PAYS
+  FROM FOURNISSEURS)) ;
+
+SELECT Nom , Prenom , Fonction , Salaire
+FROM EMPLOYES;
+
+SELECT AVG(Salaire) AS SALAIRE_MOYEN
+FROM EMPLOYES ;
+
+SELECT Nom , Prenom , Fonction , Salaire
+FROM EMPLOYES
+WHERE Salaire >
+(SELECT AVG(Salaire)
+FROM EMPLOYES);
+
+SELECT * 
+FROM EMPLOYES
+WHERE Salaire >=
+(SELECT Salaire 
+FROM EMPLOYES
+WHERE Nom = 'Davolio');
+
+SELECT *
+FROM EMPLOYES
+WHERE No_EMPLOYE NOT IN
+(SELECT NO_EMPLOYE
+FROM COMMANDES);
+
+(SELECT *
+FROM EMPLOYES
+WHERE No_EMPLOYE NOT IN
+(SELECT NO_EMPLOYE
+FROM COMMANDES))
+EXCEPT
+(SELECT * FROM EMPLOYES
+ WHERE NO_EMPLOYE IN
+ ((SELECT NO_EMPLOYE
+   FROM EMPLOYES)
+   EXCEPT
+   (SELECT NO_EMPLOYE
+    FROM COMMANDES)))
+
+SELECT * 
+FROM CLIENTS
+WHERE CODE_CLIENT NOT IN
+(SELECT CODE_CLIENT
+FROM COMMANDES);
+
+
+SELECT No_Commande 
+FROM COMMANDES
+WHERE CODE_CLIENT IN
+(SELECT CODE_CLIENT
+FROM CLIENTS 
+WHERE PAYS = 'France');
+
+SELECT u.CODE_CLIENT , u.SOCIETE , u.PAYS , v.NO_COMMANDE , v.DATE_COMMANDE
+FROM (SELECT * FROM CLIENTS WHERE Pays = 'France')  u , COMMANDES v
+WHERE (u.CODE_CLIENT = v.CODE_CLIENT) 
+ORDER BY u.CODE_CLIENT;
+
+SELECT * FROM CLIENTS ;
+
+UPDATE CLIENTS
+SET ADRESSE = '17 Avenue Leclerc'
+WHERE CODE_CLIENT = 'ALFKI' ;
+
+SELECT * FROM CLIENTS ;
+
+SELECT * FROM EMPLOYES ;
+
+UPDATE EMPLOYES 
+SET SALAIRE = SALAIRE*1.1 , COMMISSION = 1000
+WHERE NO_EMPLOYE = 8 ;
+
+SELECT * FROM EMPLOYES ;
+
+UPDATE EMPLOYES
+SET SALAIRE = 
+(SELECT AVG(Salaire)
+ FROM EMPLOYES
+ WHERE FONCTION = 'Représentant(e)')
+ WHERE NO_EMPLOYE = 9 ;
+
+ SELECT * FROM EMPLOYES ;
+
+ SELECT * FROM CATEGORIES ;
+ INSERT INTO CATEGORIES VALUES (100 , 'Vins' , 'Vins de Bordeaux');
+ INSERT INTO CATEGORIES VALUES (101 , 'Raisins' , 'Secs');
+ SELECT * FROM CATEGORIES ;
+ 
+ DELETE FROM CATEGORIES 
+ WHERE CODE_CATEGORIE IN (100 , 101) ;
+ SELECT * FROM CATEGORIES ;
+ 
+ CREATE TABLE Prospects
+ (
+ NOM VARCHAR(20) ,
+ ADRESSE VARCHAR(500)
+ ) ;
+
+Drop TABLE Prospects ;
+
+CREATE TABLE Voitures
+(
+IMMAT VARCHAR(20) ,
+PRIX NUMERIC(10,2)
+) ;
+
+/*Modele*/
+
+CREATE TABLE CONDUCTEURS
+(
+CODE_CONDUCTEUR INTEGER  NOT NULL ,
+NOM VARCHAR(50) NOT NULL ,
+PRENOM VARCHAR(50) NOT NULL ,
+MAIL VARCHAR(50) NOT NULL ,
+AGE INTEGER CHECK (AGE BETWEEN 18 AND 70) ,
+DATE_LOCATION DATE DEFAULT(GETDATE()) ,
+ADRESSE VARCHAR(50) NULL,
+DEPARTEMENT INTEGER NOT NULL ,
+CONSTRAINT PK_CONDUCTEUR PRIMARY KEY (CODE_CONDUCTEUR) ,
+CONSTRAINT UN_MAIL UNIQUE (MAIL)
+);
+
+ALTER TABLE CONDUCTEURS
+ADD CONSTRAINT CK_DEPARTEMENT CHECK(DEPARTEMENT BETWEEN 1 AND 95) ; 
+
+/*Contraintes en Action*/
+INSERT INTO CONDUCTEURS VALUES (1 , 'Harabasan' ,null ,32, 'harabazan@alphorm.com',default,null,95) ;
+
+CREATE TABLE VEHICULES 
+(
+IMMAT VARCHAR(10) NOT NULL PRIMARY KEY ,
+CODE_CONDUCTEUR INTEGER NOT NULL ,
+MARQUE VARCHAR(50) NOT NULL ,
+MODELE VARCHAR(50) NOT NULL ,
+NBR_PLACE INTEGER CHECK (NBR_PLACE BETWEEN 2 AND 7) ,
+CONSTRAINT FK_CODE_CONDUCTEUR_VEHICULE FOREIGN KEY (CODE_CONDUCTEUR) 
+REFERENCES CONDUCTEURS (CODE_CONDUCTEUR)
+);
+
+INSERT INTO VEHICULES VALUES ('12356454',2,'OPEL','Frontera',10);
+INSERT INTO VEHICULES VALUES ('12356454',2,'OPEL','Frontera',7);
+INSERT INTO VEHICULES VALUES ('78998778',1,'OPEL','Frontera',7);
+INSERT INTO VEHICULES VALUES ('78998778',1,'PEUGEOT','207',4);
+INSERT INTO VEHICULES VALUES (NULL,1,'PEUGEOT','207',4);
+
+SELECT * FROM VEHICULES ;
+
+
+/*Ajouter 1 Colonne Dans 1 Table*/
+ALTER TABLE EMPLOYES 
+ADD  MAIL  VARCHAR(50) ;
+
+ALTER TABLE EMPLOYES 
+ALTER COLUMN MAIL  VARCHAR(10)	;	
+
+ALTER TABLE EMPLOYES 
+DROP COLUMN MAIL ;
+
+/*Supression de la TABLA CONDUCTEURS IMPOSSIBLE CAR  le CHAMP CODE_CONDUCTEUR
+  EST  CLÉ ETRANGERE dANS LA TABLE VEHICULES  */
+DROP TABLE CONDUCTEURS ;
+/*Msg 3726, Niveau 16, État 1, Ligne 434
+Impossible de supprimer l'objet 'CONDUCTEURS' car il est référencé par une contrainte FOREIGN KEY.	
+*/	
+
+/*Pour Pouvoir Suprimer la TABLE Il Faut annuler la Contrinte de Clé Etrangère 
+  Dans la table Vehicule*/
+ALTER TABLE VEHICULES
+DROP CONSTRAINT [FK_CODE_CONDUCTEUR_VEHICULE] ;
+
+/*Puis Supprimer la TABLA CONDUCTEURS*/
+
+CREATE VIEW COMMANDES_PAR_CLIENT 
+(CLIENT , Nombre_Commandes) AS
+(SELECT u.SOCIETE AS CLIENT , COUNT(v.NO_COMMANDE) AS "NOMBRE DE COMMANDES"
+FROM CLIENTS u , COMMANDES v
+WHERE u.CODE_CLIENT = v.CODE_CLIENT
+GROUP BY u.SOCIETE 
+);
+
+SELECT * FROM COMMANDES_PAR_CLIENT ;
+
+DROP VIEW COMMANDES_PAR_CLIENT ;
+	
+CREATE SEQUENCE SEQ_1
+START WITH 5
+INCREMENT BY 5
+MINVALUE 5
+MAXVALUE 10000
+CYCLE 
+CACHE ;
+
+SELECT NEXT VALUE FOR SEQ_1 ;
+
+CREATE TABLE Table_1
+(
+NUM INTEGER DEFAULT(NEXT VALUE FOR SEQ_1) ,
+NOM VARCHAR(20)
+);
+
+CREATE TABLE Table_2
+(
+NUM INTEGER DEFAULT(NEXT VALUE FOR SEQ_1) ,
+NOM VARCHAR(20)
+);
+
+INSERT INTO Table_1 VALUES (default , 'test  SEQ_1 Table_1') ;
+INSERT INTO Table_1 VALUES (default , 'test  SEQ_1 Table_1') ;
+INSERT INTO Table_1 VALUES (default , 'test  SEQ_1 Table_1') ;
+INSERT INTO Table_1 VALUES (default , 'test  SEQ_1 Table_1') ;
+
+SELECT * FROM Table_1 ;
+
+INSERT INTO Table_2 VALUES (default , 'test  SEQ_1 Table_2') ;
+
+SELECT * FROM Table_2 ;
+
+/*Impossible de Supprimer la Sequence SEQ_1 Car Référencé Par les Table Table_1 et Table_2 
+  Dans une Contrainte DEFAULT*/
+DROP SEQUENCE SEQ_1 ;
+
+CREATE SYNONYM Cli FOR CLIENTS ;
+CREATE SYNONYM Com FOR COMMANDES ;
+CREATE SYNONYM Dc FOR DETAILS_COMMANDES ;
+
+SELECT * FROM dc ;
+SELECT * FROM Cli ;
+SELECT * FROM Com ;
+
+SELECT u.SOCIETE , v.NO_COMMANDE , v.DATE_COMMANDE
+FROM Cli u , Com v
+WHERE u.CODE_CLIENT = v.CODE_CLIENT
+ORDER BY u.SOCIETE ;
+ 
+CREATE TABLE TEST_PERF
+(
+NUM INTEGER ,
+NOM VARCHAR(50)
+);
+
+/*#TRANSA_Chépukoi SQL*/
+
+DECLARE @cpt INT
+SELECT @cpt = 1
+WHILE @cpt<=100000
+BEGIN 
+INSERT INTO TEST_PERF VALUES (@cpt , 'Text Index LANGAGE SQL');
+SELECT @cpt = @cpt+1
+END
+
+SELECT COUNT(*) FROM TEST_PERF ;
+
+SELECT NUM FROm TEST_PERF WHERE NUM = 100000 ;
+/*Inclure Plan d'execution dans Requête>Inclure Plan d'execution */
+ 
+CREATE INDEX IDX_NUM ON  TEST_PERF (NUM) ;
+SELECT NUM FROm TEST_PERF WHERE NUM = 100000 ;
+
+DROP INDEX TEST_PERF.IDX_NUM ;
